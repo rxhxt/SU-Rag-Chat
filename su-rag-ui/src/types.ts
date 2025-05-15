@@ -4,6 +4,7 @@ export interface ChatMeta {
     userId: string;
     userName: string;
     favorite: boolean;
+    
 }
 
 export interface UserProfile {
