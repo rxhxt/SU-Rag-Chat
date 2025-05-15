@@ -16,7 +16,7 @@ import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import MenuIcon from '@mui/icons-material/Menu';
 
-import Sidebar from '../components/Sidebar';
+import TopBar from '../components/TopBar';
 import ChatList from '../components/ChatList';
 import ChatWindow from '../components/ChatWindow';
 import { ChatMeta } from '../types';
@@ -183,68 +183,30 @@ const App: React.FC = () => {
         bgcolor: 'background.default',
         height: '100vh',
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'column', // Change from row to column layout
         overflow: 'hidden',
       }}
     >
+      <CssBaseline />
+      
+      {/* TopBar at the top */}
+      <TopBar
+        onNewChat={handleNewChat}
+        isAdmin={getUserRole() === 'admin'}
+        showFavorites={showFavorites}
+        onShowFavorites={() => setShowFavorites(f => !f)}
+        onLogout={handleLogout}
+      />
+      
+      {/* Main content area */}
       <Paper
         sx={{
-          display: 'flex',
           flexGrow: 1,
-          borderRadius: 0,
+          display: 'flex',
           overflow: 'hidden',
+          borderRadius: 0,
         }}
-        square
       >
-        {/* Top bar for mobile */}
-        {isMobile && (
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              height: 56,
-              bgcolor: 'primary.main',
-              color: 'primary.contrastText',
-              display: 'flex',
-              alignItems: 'center',
-              px: 1,
-              zIndex: 10,
-            }}
-          >
-            <IconButton
-              color="inherit"
-              onClick={() => setChatListOpen(o => !o)}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" sx={{ flexGrow: 1 }}>
-              Seattle University RAG
-            </Typography>
-            <IconButton color="inherit" onClick={handleLogout}>
-              <LogoutIcon />
-            </IconButton>
-          </Box>
-        )}
-
-        {/* Icon sidebar */}
-        <Box
-          sx={{
-            width: sidebarOpen ? 72 : 0,
-            transition: theme.transitions.create('width'),
-            overflow: 'hidden',
-            height: '100%',
-          }}
-        >
-          <Sidebar
-            onNewChat={handleNewChat}
-            showFavorites={showFavorites}         
-            isAdmin={getUserRole() === 'admin'}
-            onShowFavorites={() => setShowFavorites(f => !f)}
-          />
-        </Box>
-
         {/* Chat list panel */}
         <Box
           sx={{
@@ -265,7 +227,7 @@ const App: React.FC = () => {
             ...(isMobile && !chatListOpen && { display: 'none' }),
           }}
         >
-          {/* Header */}
+          {/* Chats header */}
           <Box
             sx={{
               px: 2,
@@ -297,8 +259,7 @@ const App: React.FC = () => {
               )}
             </Box>
           </Box>
-
-          {/* List */}
+          {/* Chat list */}
           <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
             <ChatList
               chats={displayedChats}
@@ -306,8 +267,6 @@ const App: React.FC = () => {
               onSelect={handleSelectChat}
               onDelete={handleDeleteChat}
               onToggleFav={handleToggleFav}
-              // showFavorites={showFavorites}
-              // onShowFavorites={() => setShowFavorites(f => !f)}
             />
           </Box>
         </Box>
@@ -321,9 +280,10 @@ const App: React.FC = () => {
             justifyContent: currentChat ? 'stretch' : 'center',
             position: 'relative',
             pt: isMobile ? 7 : 0,
+            pl: sidebarOpen ? '0px' : '0px',     // no longer overlaps
           }}
         >
-          {/* “Show chat list” button when collapsed on desktop */}
+          {/* Desktop “show list” button */}
           {!isMobile && !chatListOpen && (
             <IconButton
               onClick={() => setChatListOpen(true)}
@@ -333,17 +293,22 @@ const App: React.FC = () => {
             </IconButton>
           )}
 
-          {/* Desktop logout when panels collapsed */}
-          {!isMobile && (
+          {/* Desktop logout */}
+          {/* {!isMobile && (
             <IconButton
               onClick={handleLogout}
-              sx={{ position: 'absolute', top: 8, right: 8, zIndex: 1 }}
+              sx={{
+                position: 'absolute',
+                top: 8,
+                right: sidebarOpen ? 8 : 16,  // shift right if sidebar is visible
+                zIndex: 1,
+              }}
             >
               <LogoutIcon />
             </IconButton>
-          )}
+          )} */}
 
-          {/* Welcome screen */}
+          {/* Welcome message */}
           {!currentChat && (
             <Box sx={{ textAlign: 'center', p: 4, color: 'text.secondary' }}>
               <Typography variant="h5" gutterBottom>

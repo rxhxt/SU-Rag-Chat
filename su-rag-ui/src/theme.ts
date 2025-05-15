@@ -2,7 +2,7 @@
 import { createTheme } from '@mui/material/styles';
 
 // Seattle University red (approx)
-const SU_RED = '#BA0C2E';
+const SU_RED = '#aa0000';
 
 const theme = createTheme({
   palette: {
@@ -21,7 +21,7 @@ const theme = createTheme({
     text: {
       primary: '#000000',
       secondary: '#555555',
-    },
+    }
   },
   shape: {
     borderRadius: 8,          // a bit rounder
